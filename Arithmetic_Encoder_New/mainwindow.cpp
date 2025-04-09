@@ -964,8 +964,12 @@ void MainWindow::compressText()
 
 void MainWindow::decompressText()
 {
-    std::string filePath = browseTxtFile();
-    std::cout << filePath;
+    std::string compressedFile = browseTxtFile();
+    std::cout << compressedFile << std::endl;
+
+    std::string decompressedFile = saveFile();
+
+    std::cout << decompressedFile << std::endl;
 }
 
 std::string MainWindow::saveFile()
@@ -977,6 +981,14 @@ std::string MainWindow::saveFile()
         "Text Files (*.txt);;All Files (*)"
         ).toStdString();
 
-    return fileName;
+    if (!fileName.empty()) {
+        qDebug() << "Selected file:" << fileName;
+        return fileName;
+    }
+    else
+    {
+        qDebug() << "no file selected, try again";
+        return saveFile();
+    }
 }
 
