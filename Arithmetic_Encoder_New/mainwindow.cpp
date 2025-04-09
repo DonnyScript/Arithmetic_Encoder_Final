@@ -33,6 +33,8 @@
 #include "arithmetic_decoder.h"
 #include "arithmetic_encoder.h"
 #include <fstream>
+#include <iostream>
+
 // 1) CIS476Project Implementation
 DropZone::DropZone(QWidget *parent)
     : QLabel(parent)
@@ -462,7 +464,7 @@ MainWindow::MainWindow(QWidget *parent)
             "QPushButton:hover { background-color: #df00ff; }"
             "QPushButton:pressed { background-color: #d6e1ff; }"
             );
-        connect(browseButton, &QPushButton::clicked, this, &MainWindow::browseFile);
+        connect(browseButton, &QPushButton::clicked, this, &MainWindow::browseImageFile);
 
         fileSelectionLayout->addWidget(selectedFileLabel);
         fileSelectionLayout->addWidget(cancelFileButton);
@@ -698,7 +700,7 @@ void MainWindow::switchToFileMode()
 }
 
 // Browse for an image
-void MainWindow::browseFile()
+void MainWindow::browseImageFile()
 {
     QString filePath = QFileDialog::getOpenFileName(
         this,
@@ -708,6 +710,26 @@ void MainWindow::browseFile()
         );
     if (!filePath.isEmpty()) {
         handleDroppedFile(filePath);
+    }
+}
+
+std::string MainWindow::browseTxtFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(
+        nullptr,                                 // parent widget
+        "Open Text File",                        // dialog title
+        "",                                      // starting directory
+        "Text Files (*.txt);;All Files (*)"     // filter
+        );
+
+    if (!fileName.isEmpty()) {
+        qDebug() << "Selected file:" << fileName;
+        return fileName.toStdString();
+    }
+    else
+    {
+        qDebug() << "no file selected, try again";
+        return browseTxtFile();
     }
 }
 
@@ -790,13 +812,11 @@ void MainWindow::decompressFile()
     bool isText = textModeRadio->isChecked();
 
     if (isText) {
-        QString text = textInput->toPlainText();
-        if (text.isEmpty()) {
-            QMessageBox::warning(this, "Empty Input", "Please enter text to decompress");
-            return;
-        }
         operationInProgress = true;
         statusLabel->setText("⚙️ Decompressing text...");
+
+        //DECOMPRESS HERE
+        decompressText();
 
         addHistoryEntry("Text Data", "Decompress");
     } else {
@@ -927,14 +947,25 @@ void MainWindow::compressText()
     std::vector<unsigned char> encoded_bits = encoder.finish();
 
     // Print encoded bits
-    //qDebug().nospace() << "Encoded bits: ";
+    /*
+    std::cout << "Encoded bits: ";
     for (unsigned char byte : encoded_bits)
     {
         for (int bit = 7; bit >= 0; --bit)
         {
-           // qDebug().nospace() << ((byte >> bit) & 1);
+           std::cout << ((byte >> bit) & 1);
         }
+        std::cout << "  ";
     }
+    BINARY IS PRINTING WRONG BUT STILL ENCODING CORRECTLY
+    */
+}
+
+
+void MainWindow::decompressText()
+{
+    std::string filePath = browseTxtFile();
+    std::cout << filePath;
 }
 
 std::string MainWindow::saveFile()

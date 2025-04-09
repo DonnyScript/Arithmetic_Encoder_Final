@@ -95,7 +95,8 @@ private slots:
     void switchToFileMode();
 
     // File input actions
-    void browseFile();
+    void browseImageFile();
+    std::string browseTxtFile();
     void handleDroppedFile(const QString &filePath);
     void clearFileSelection();
     std::string saveFile();
@@ -104,6 +105,7 @@ private slots:
     void compressFile();
     void compressText();
     void decompressFile();
+    void decompressText();
 
     // Progress bar updates
     void updateProgressBar();
