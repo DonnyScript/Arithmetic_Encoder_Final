@@ -1,6 +1,7 @@
 #include "arithmetic_decoder.h"
 #include "arithmetic_encoder.h"  // For constants like TOP_VALUE, HALF, etc.
 #include <iostream>
+#include <algorithm>
 
 ArithmeticDecoder::ArithmeticDecoder(const std::vector<unsigned char>& input_bits)
   : input_bytes(input_bits), bit_index(0), low(0), high(TOP_VALUE), code(0) 
