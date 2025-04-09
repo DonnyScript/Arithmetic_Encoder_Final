@@ -1,15 +1,17 @@
 #include "arithmetic_encoder.h"
 #include <iostream>
+#include <fstream>
 
-ArithmeticEncoder::ArithmeticEncoder() : low(0), high(TOP_VALUE), pending_bits(0), current_byte(0), bit_count(0) {}
+ArithmeticEncoder::ArithmeticEncoder(std::ofstream& file) : low(0), high(TOP_VALUE), pending_bits(0), current_byte(0), bit_count(0), compressedFile(file) {}
 
-void ArithmeticEncoder::outputBit(int bit) 
+void ArithmeticEncoder::outputBit(int bit)
 {
   current_byte = (current_byte << 1) | bit;
   bit_count++;
 
   if (bit_count == 8) 
   {
+    compressedFile << current_byte;
     output.push_back(current_byte);
     current_byte = 0;
     bit_count = 0;
@@ -21,6 +23,7 @@ void ArithmeticEncoder::outputBit(int bit)
     bit_count++;
 
     if (bit_count == 8) {
+      compressedFile << current_byte;
       output.push_back(current_byte);
       current_byte = 0;
       bit_count = 0;
@@ -90,6 +93,7 @@ std::vector<unsigned char> ArithmeticEncoder::finish()
 
   if (bit_count > 0)
   {
+    compressedFile << current_byte;
     output.push_back(current_byte << (8 - bit_count));
   }
   std::cout << "Encoder finished, bitstream size: " << output.size() << " bytes\n";

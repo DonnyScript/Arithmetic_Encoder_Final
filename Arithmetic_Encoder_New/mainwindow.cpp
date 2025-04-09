@@ -28,7 +28,11 @@
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QMetaType>
-
+#include <string>
+#include "adaptive_model.h"
+#include "arithmetic_decoder.h"
+#include "arithmetic_encoder.h"
+#include <fstream>
 // 1) CIS476Project Implementation
 DropZone::DropZone(QWidget *parent)
     : QLabel(parent)
@@ -755,6 +759,8 @@ void MainWindow::compressFile()
         operationInProgress = true;
         statusLabel->setText("⚙️ Compressing text...");
 
+        //COMPRESS HERE
+        compressText();
 
         addHistoryEntry("Text Data", "Compress");
     } else {
@@ -895,3 +901,51 @@ void MainWindow::showUserGuide()
     userGuideDialog->raise();
     userGuideDialog->activateWindow();
 }
+
+void MainWindow::compressText()
+{
+    std::string savePath = saveFile();
+    std::ofstream compressedFile(savePath);
+    // Prepare data with EOF symbol
+    std::string message = textInput->toPlainText().toStdString();
+    const int EOF_SYMBOL = 256;
+    std::vector<int> data;
+    for (char ch : message)
+    {
+        data.push_back(static_cast<int>(static_cast<unsigned char>(ch)));
+    }
+    data.push_back(EOF_SYMBOL);
+
+    // Encoding
+    AdaptiveModel modelEncoder;
+    ArithmeticEncoder encoder(compressedFile);
+    for (int symbol : data)
+    {
+        encoder.encodeSymbol(symbol, modelEncoder);
+        modelEncoder.update(symbol);
+    }
+    std::vector<unsigned char> encoded_bits = encoder.finish();
+
+    // Print encoded bits
+    //qDebug().nospace() << "Encoded bits: ";
+    for (unsigned char byte : encoded_bits)
+    {
+        for (int bit = 7; bit >= 0; --bit)
+        {
+           // qDebug().nospace() << ((byte >> bit) & 1);
+        }
+    }
+}
+
+std::string MainWindow::saveFile()
+{
+    std::string fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save File",
+        QDir::homePath(),         // default folder
+        "Text Files (*.txt);;All Files (*)"
+        ).toStdString();
+
+    return fileName;
+}
+

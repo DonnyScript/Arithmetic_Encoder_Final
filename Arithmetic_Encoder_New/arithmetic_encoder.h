@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "adaptive_model.h"
+#include <fstream>
 
 const int CODE_VALUE_BITS = 16;
 const int TOP_VALUE = (1 << CODE_VALUE_BITS) - 1;
@@ -12,10 +13,11 @@ const int THIRD_QUARTER = 3 * FIRST_QUARTER;
 
 class ArithmeticEncoder {
 public:
-  ArithmeticEncoder();
+  ArithmeticEncoder(std::ofstream&);
   void encodeSymbol(int symbol, AdaptiveModel& model);
   std::vector<unsigned char> finish();
   std::vector<unsigned char> output;
+  std::ofstream& compressedFile;
 
 private:
   int low, high;

@@ -98,9 +98,11 @@ private slots:
     void browseFile();
     void handleDroppedFile(const QString &filePath);
     void clearFileSelection();
+    std::string saveFile();
 
     // Compression & Decompression
     void compressFile();
+    void compressText();
     void decompressFile();
 
     // Progress bar updates

@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,10 +8,7 @@
 
 int mainReference()
 {
-    // Get user input
-    std::cout << "Enter Message: ";
     std::string message;
-    std::getline(std::cin, message);
 
     // Prepare data with EOF symbol
     const int EOF_SYMBOL = 256;
@@ -31,16 +29,7 @@ int mainReference()
     }
     std::vector<unsigned char> encoded_bits = encoder.finish();
 
-    // Print encoded bits
-    std::cout << "Encoded bits: ";
-    for (unsigned char byte : encoded_bits)
-    {
-        for (int bit = 7; bit >= 0; --bit)
-        {
-            std::cout << ((byte >> bit) & 1);
-        }
-    }
-    std::cout << std::endl;
+
 
     // Calculate and print average bits per symbol
     double bits_per_symbol = (encoded_bits.size() * 8.0) / data.size();
@@ -82,3 +71,4 @@ int mainReference()
 
     return 0;
 }
+*/
