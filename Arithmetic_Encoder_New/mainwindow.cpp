@@ -964,12 +964,11 @@ void MainWindow::compressText()
 
 void MainWindow::decompressText()
 {
-    std::string compressedFile = browseTxtFile();
-    std::cout << compressedFile << std::endl;
+    std::string compressedFilePath = browseTxtFile();
+    std::ifstream compressedFile(compressedFilePath);
 
-    std::string decompressedFile = saveFile();
-
-    std::cout << decompressedFile << std::endl;
+    std::string decompressedFilePath = saveFile();
+    std::ofstream decompressedFile(decompressedFilePath);
 }
 
 std::string MainWindow::saveFile()
