@@ -96,10 +96,11 @@ private slots:
 
     // File input actions
     void browseImageFile();
-    std::string browseTxtFile();
+    std::string browseBinFile();
     void handleDroppedFile(const QString &filePath);
     void clearFileSelection();
     std::string saveFile();
+    std::string saveBinFile();
 
     // Compression & Decompression
     void compressFile();

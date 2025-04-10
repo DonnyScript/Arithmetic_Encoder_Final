@@ -37,6 +37,7 @@
 
 const int EOF_SYMBOL = 256;
 
+
 // 1) CIS476Project Implementation
 DropZone::DropZone(QWidget *parent)
     : QLabel(parent)
@@ -715,13 +716,13 @@ void MainWindow::browseImageFile()
     }
 }
 
-std::string MainWindow::browseTxtFile()
+std::string MainWindow::browseBinFile()
 {
     QString fileName = QFileDialog::getOpenFileName(
         nullptr,                                 // parent widget
         "Open Text File",                        // dialog title
         "",                                      // starting directory
-        "Text Files (*.txt);;All Files (*)"     // filter
+        "Bin Files (*.bin);;All Files (*)"     // filter
         );
 
     if (!fileName.isEmpty()) {
@@ -731,7 +732,7 @@ std::string MainWindow::browseTxtFile()
     else
     {
         qDebug() << "no file selected, try again";
-        return browseTxtFile();
+        return browseBinFile();
     }
 }
 
@@ -926,8 +927,8 @@ void MainWindow::showUserGuide()
 
 void MainWindow::compressText()
 {
-    std::string savePath = saveFile();
-    std::ofstream compressedFile(savePath);
+    std::string savePath = saveBinFile();
+    std::ofstream compressedFile(savePath, std::ios::binary);
     // Prepare data with EOF symbol
     std::string message = textInput->toPlainText().toStdString();
     std::vector<int> data;
@@ -939,7 +940,7 @@ void MainWindow::compressText()
 
     // Encoding
     AdaptiveModel modelEncoder;
-    ArithmeticEncoder encoder(compressedFile);
+    ArithmeticEncoder encoder;
     for (int symbol : data)
     {
         encoder.encodeSymbol(symbol, modelEncoder);
@@ -947,34 +948,38 @@ void MainWindow::compressText()
     }
     std::vector<unsigned char> encoded_bits = encoder.finish();
 
-    // Print encoded bits
-    /*
-    std::cout << "Encoded bits: ";
-    for (unsigned char byte : encoded_bits)
+    for(unsigned char byte : encoded_bits)
     {
-        for (int bit = 7; bit >= 0; --bit)
-        {
-           std::cout << ((byte >> bit) & 1);
-        }
-        std::cout << "  ";
+        compressedFile.write(reinterpret_cast<const char*>(&byte), 1);
     }
-    BINARY IS PRINTING WRONG BUT STILL ENCODING CORRECTLY
-    */
+    compressedFile.close();
 }
 
 
 void MainWindow::decompressText()
 {
-    std::string compressedFilePath = browseTxtFile();
-    std::ifstream compressedFile(compressedFilePath);
+    std::string compressedFilePath = browseBinFile();
+    std::ifstream compressedFile(compressedFilePath, std::ios::binary);
+
+    std::vector<unsigned char> input_bits;
+    char readChar;
+    while(compressedFile.read(&readChar, 1))
+    {
+        input_bits.push_back(static_cast<unsigned char>(readChar));
+        std::cout << input_bits.back();
+    }
+    compressedFile.close();
+
     std::string decompressedFilePath = saveFile();
     std::ofstream decompressedFile(decompressedFilePath);
 
     AdaptiveModel modelDecoder;
-    ArithmeticDecoder decoder(compressedFile);
+    ArithmeticDecoder decoder(input_bits);
+    std::vector<int> decodedSymbols;
+    const int MAX_SYMBOLS = 10000; // Safety limit
+    int symbol_count = 0;
 
-    int intSymbol;
-    while (true)
+    while (symbol_count < MAX_SYMBOLS)
     {
         int symbol = decoder.decodeSymbol(modelDecoder);
         modelDecoder.update(symbol);
@@ -982,8 +987,21 @@ void MainWindow::decompressText()
         {
             break;
         }
-        decompressedFile << static_cast<unsigned char>(symbol);
+        decodedSymbols.push_back(symbol);
+        symbol_count++;
     }
+
+    if (symbol_count == MAX_SYMBOLS)
+    {
+        std::cerr << "Decoder exceeded maximum symbols without finding EOF.\n";
+    }
+
+    for(int s : decodedSymbols)
+    {
+        decompressedFile << static_cast<char>(s);
+        std::cout << static_cast<char>(s);
+    }
+    decompressedFile.close();
 }
 
 std::string MainWindow::saveFile()
@@ -1006,3 +1024,22 @@ std::string MainWindow::saveFile()
     }
 }
 
+std::string MainWindow::saveBinFile()
+{
+    std::string fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save File",
+        QDir::homePath(),         // default folder
+        "Bin Files (*.bin);;All Files (*)"
+        ).toStdString();
+
+    if (!fileName.empty()) {
+        qDebug() << "Selected file:" << fileName;
+        return fileName;
+    }
+    else
+    {
+        qDebug() << "no file selected, try again";
+        return saveFile();
+    }
+}
