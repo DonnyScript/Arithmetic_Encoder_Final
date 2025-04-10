@@ -35,6 +35,8 @@
 #include <fstream>
 #include <iostream>
 
+const int EOF_SYMBOL = 256;
+
 // 1) CIS476Project Implementation
 DropZone::DropZone(QWidget *parent)
     : QLabel(parent)
@@ -928,7 +930,6 @@ void MainWindow::compressText()
     std::ofstream compressedFile(savePath);
     // Prepare data with EOF symbol
     std::string message = textInput->toPlainText().toStdString();
-    const int EOF_SYMBOL = 256;
     std::vector<int> data;
     for (char ch : message)
     {
@@ -966,9 +967,23 @@ void MainWindow::decompressText()
 {
     std::string compressedFilePath = browseTxtFile();
     std::ifstream compressedFile(compressedFilePath);
-
     std::string decompressedFilePath = saveFile();
     std::ofstream decompressedFile(decompressedFilePath);
+
+    AdaptiveModel modelDecoder;
+    ArithmeticDecoder decoder(compressedFile);
+
+    int intSymbol;
+    while (true)
+    {
+        int symbol = decoder.decodeSymbol(modelDecoder);
+        modelDecoder.update(symbol);
+        if (symbol == EOF_SYMBOL)
+        {
+            break;
+        }
+        decompressedFile << static_cast<unsigned char>(symbol);
+    }
 }
 
 std::string MainWindow::saveFile()

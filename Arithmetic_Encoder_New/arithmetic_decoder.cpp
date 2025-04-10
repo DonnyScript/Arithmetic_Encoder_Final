@@ -3,27 +3,34 @@
 #include <iostream>
 #include <algorithm>
 
-ArithmeticDecoder::ArithmeticDecoder(const std::vector<unsigned char>& input_bits)
-  : input_bytes(input_bits), bit_index(0), low(0), high(TOP_VALUE), code(0) 
+ArithmeticDecoder::ArithmeticDecoder(std::ifstream& input_bits)
+  : input_bytes(input_bits), bit_index(0), low(0), high(TOP_VALUE), code(0)
 {
-  for (int i = 0; i < CODE_VALUE_BITS; i++) 
+  for (int i = 0; i < CODE_VALUE_BITS; i++)
   {
     code = (code << 1) | readBit();
   }
 }
 
-int ArithmeticDecoder::readBit() 
+int ArithmeticDecoder::readBit()
 {
-  if (bit_index >= input_bytes.size() * 8)
-  {
-    return 0;
-  }
+    char currentByte;
 
-  int byte_index = bit_index / 8;
-  int bit_offset = bit_index % 8;
-  bit_index++;
-  return (input_bytes[byte_index] >> (7 - bit_offset)) & 1;
+    // Try to read a byte
+    if (!input_bytes.get(currentByte))  // Check if reading the byte was successful
+    {
+        std::cout << "End of file reached or error occurred";
+        return 0;  // Return 0 when EOF or an error is encountered
+    }
+
+    unsigned currentByteUnSigned = currentByte;
+
+    int bit_offset = bit_index % 8;
+    bit_index++;
+
+    return (currentByteUnSigned >> (7 - bit_offset)) & 1;  // Extract the bit
 }
+
 
 int ArithmeticDecoder::decodeSymbol(AdaptiveModel& model) {
   int total = model.total;
