@@ -797,6 +797,9 @@ void MainWindow::compressFile()
         operationInProgress = true;
         statusLabel->setText("⚙️ Compressing: " + QFileInfo(currentFilePath).fileName());
 
+        //COMPRESS BMP HERE
+        compressImage();
+
         addHistoryEntry(QFileInfo(currentFilePath).fileName(), "Compress");
     }
 
@@ -829,6 +832,8 @@ void MainWindow::decompressFile()
         }
         operationInProgress = true;
         statusLabel->setText("⚙️ Decompressing: " + QFileInfo(currentFilePath).fileName());
+
+        //DECOMPRESS IMAGE HERE
 
         addHistoryEntry(QFileInfo(currentFilePath).fileName(), "Decompress");
     }
@@ -956,6 +961,36 @@ void MainWindow::compressText()
 }
 
 
+void MainWindow::compressImage()
+{
+    std::string savePath = saveBinFile();
+    std::ofstream compressedFile(savePath, std::ios::binary);
+    std::ifstream imageFile(currentFilePath.toStdString(), std::ios::binary);
+    std::vector<unsigned char> pixel_data;
+    char readChar;
+    while(imageFile.read(&readChar, 1))
+    {
+        pixel_data.push_back(static_cast<unsigned char>(readChar));
+        std::cout << pixel_data.back();
+    }
+    compressedFile.close();
+
+    AdaptiveModel modelEncoder;
+    ArithmeticEncoder encoder;
+    for (int symbol : pixel_data)
+    {
+        encoder.encodeSymbol(symbol, modelEncoder);
+        modelEncoder.update(symbol);
+    }
+    std::vector<unsigned char> encoded_bits = encoder.finish();
+
+    for(unsigned char byte : encoded_bits)
+    {
+        compressedFile.write(reinterpret_cast<const char*>(&byte), 1);
+    }
+    compressedFile.close();
+}
+
 void MainWindow::decompressText()
 {
     std::string compressedFilePath = browseBinFile();
@@ -1002,6 +1037,12 @@ void MainWindow::decompressText()
         std::cout << static_cast<char>(s);
     }
     decompressedFile.close();
+}
+
+
+void MainWindow::decompressImage()
+{
+
 }
 
 std::string MainWindow::saveFile()

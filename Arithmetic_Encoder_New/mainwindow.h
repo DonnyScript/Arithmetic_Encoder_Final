@@ -105,8 +105,10 @@ private slots:
     // Compression & Decompression
     void compressFile();
     void compressText();
+    void compressImage();
     void decompressFile();
     void decompressText();
+    void decompressImage();
 
     // Progress bar updates
     void updateProgressBar();
