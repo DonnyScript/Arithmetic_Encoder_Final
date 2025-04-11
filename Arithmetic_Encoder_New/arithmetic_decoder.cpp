@@ -39,7 +39,7 @@ int ArithmeticDecoder::decodeSymbol(AdaptiveModel& model) {
   high = low + (range_width * cum_high) / total - 1;
   low = low + (range_width * cum_low) / total;
 
-  std::cout << "Decoded symbol: " << symbol << ", low: " << low << ", high: " << high << ", code: " << code << "\n";
+  //std::cout << "Decoded symbol: " << symbol << ", low: " << low << ", high: " << high << ", code: " << code << "\n";
 
   while (true) {
     if (high < HALF) {
