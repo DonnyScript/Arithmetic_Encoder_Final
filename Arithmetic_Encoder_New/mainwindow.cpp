@@ -826,14 +826,11 @@ void MainWindow::decompressFile()
 
         addHistoryEntry("Text Data", "Decompress");
     } else {
-        if (currentFilePath.isEmpty()) {
-            QMessageBox::warning(this, "No File Selected", "Please select an image to decompress");
-            return;
-        }
         operationInProgress = true;
         statusLabel->setText("⚙️ Decompressing: " + QFileInfo(currentFilePath).fileName());
 
         //DECOMPRESS IMAGE HERE
+        decompressImage();
 
         addHistoryEntry(QFileInfo(currentFilePath).fileName(), "Decompress");
     }
@@ -966,14 +963,15 @@ void MainWindow::compressImage()
     std::string savePath = saveBinFile();
     std::ofstream compressedFile(savePath, std::ios::binary);
     std::ifstream imageFile(currentFilePath.toStdString(), std::ios::binary);
-    std::vector<unsigned char> pixel_data;
+    std::vector<int> pixel_data;
     char readChar;
     while(imageFile.read(&readChar, 1))
     {
-        pixel_data.push_back(static_cast<unsigned char>(readChar));
-        std::cout << pixel_data.back();
+        pixel_data.push_back(static_cast<int>(static_cast<unsigned char>(readChar)));
     }
-    compressedFile.close();
+    pixel_data.push_back(EOF_SYMBOL);
+
+    imageFile.close();
 
     AdaptiveModel modelEncoder;
     ArithmeticEncoder encoder;
@@ -1034,7 +1032,7 @@ void MainWindow::decompressText()
     for(int s : decodedSymbols)
     {
         decompressedFile << static_cast<char>(s);
-        std::cout << static_cast<char>(s);
+        //std::cout << static_cast<char>(s);
     }
     decompressedFile.close();
 }
@@ -1042,7 +1040,42 @@ void MainWindow::decompressText()
 
 void MainWindow::decompressImage()
 {
+    std::string compressedFilePath = browseBinFile();
+    std::ifstream compressedFile(compressedFilePath, std::ios::binary);
 
+    std::string decompressedImagePath = saveBMPFile();
+    std::ofstream decompressedImage(decompressedImagePath, std::ios::binary);
+
+    std::vector<unsigned char> input_bits;
+    char readChar;
+    while(compressedFile.read(&readChar, 1))
+    {
+        input_bits.push_back(static_cast<unsigned char>(readChar));
+        //std::cout << input_bits.back();
+    }
+    compressedFile.close();
+
+    AdaptiveModel modelDecoder;
+    ArithmeticDecoder decoder(input_bits);
+    std::vector<int> decodedSymbols;
+
+    while (true)
+    {
+        int symbol = decoder.decodeSymbol(modelDecoder);
+        modelDecoder.update(symbol);
+        if (symbol == EOF_SYMBOL)
+        {
+            break;
+        }
+        decodedSymbols.push_back(symbol);
+    }
+
+    for(int s : decodedSymbols)
+    {
+        decompressedImage.write(reinterpret_cast<const char*>(&s), 1);
+        //std::cout << static_cast<char>(s);
+    }
+    decompressedImage.close();
 }
 
 std::string MainWindow::saveFile()
@@ -1072,6 +1105,26 @@ std::string MainWindow::saveBinFile()
         "Save File",
         QDir::homePath(),         // default folder
         "Bin Files (*.bin);;All Files (*)"
+        ).toStdString();
+
+    if (!fileName.empty()) {
+        qDebug() << "Selected file:" << fileName;
+        return fileName;
+    }
+    else
+    {
+        qDebug() << "no file selected, try again";
+        return saveFile();
+    }
+}
+
+std::string MainWindow::saveBMPFile()
+{
+    std::string fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save File",
+        QDir::homePath(),         // default folder
+        "BMP Files (*.bmp);;All Files (*)"
         ).toStdString();
 
     if (!fileName.empty()) {

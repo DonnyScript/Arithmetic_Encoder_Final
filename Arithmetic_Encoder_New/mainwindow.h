@@ -97,6 +97,7 @@ private slots:
     // File input actions
     void browseImageFile();
     std::string browseBinFile();
+    std::string saveBMPFile();
     void handleDroppedFile(const QString &filePath);
     void clearFileSelection();
     std::string saveFile();

@@ -33,7 +33,7 @@ void ArithmeticEncoder::outputBit(int bit)
 
 void ArithmeticEncoder::encodeSymbol(int symbol, AdaptiveModel& model)
 {
-    std::cout << "Encoding symbol: " << symbol << "\n";
+    //std::cout << "Encoding symbol: " << symbol << "\n"; COMMENTED OUT FOR LARGE FILES
     auto range = model.getRange(symbol);
     int cum_low = range.first;
     int cum_high = range.second;
