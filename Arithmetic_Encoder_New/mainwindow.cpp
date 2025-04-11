@@ -709,7 +709,7 @@ void MainWindow::browseImageFile()
         this,
         "Select Image",
         "",
-        "Images (*.png *.jpg *.jpeg *.bmp *.gif)" // only images
+        "Images (*.bmp)" // only images
         );
     if (!filePath.isEmpty()) {
         handleDroppedFile(filePath);
