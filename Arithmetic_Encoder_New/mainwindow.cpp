@@ -198,18 +198,18 @@ UserGuideDialog::UserGuideDialog(QWidget *parent)
         <h3>What is Arithmetic Encoding?</h3>
         <p>
           Arithmetic Encoding is a form of entropy encoding used in lossless data compression.
-          It can compress both text and image files (PNG, JPG, BMP, GIF).
+          It can compress any data into a binary file, which can be restored using a decompression algorithm that mirrors the compression algorithm.
           Instead of encoding each symbol with a fixed number of bits, it encodes
-          the entire message into one number.
+          the entire message into one *very* precise number. Our program compresses text from the text bar, and can compress an image of BMP type.
         </p>
 
         <h3>How to Use Arithma-Tech</h3>
         <ol>
           <li>Select <b>File Input</b> if you want to compress/decompress an image
-              (PNG, JPG, BMP, GIF). Or choose <b>Text Input</b> to compress raw text.</li>
-          <li>Either drag-and-drop your image or click <b>Browse...</b> to choose one.
-              For text, simply type or paste it.</li>
-          <li>Click <b>Compress</b> to encode your data, or <b>Decompress</b> to restore it.</li>
+              (BMP). Or choose <b>Text Input</b> to compress raw text.</li>
+          <li>If you are compressing a file: either drag-and-drop your image or click <b>Browse...</b> to choose one.
+              For text, simply type or paste it. Then click <b>Compress</b>.</li>
+          <li>If you are decompressing a file: Click <b>Decompress</b> and select the file you want to decompress. Then select a location and name for the decompressed file.</li>
           <li>Open the <b>File History</b> dialog from the menu to review and manage logs.</li>
         </ol>
     )");
@@ -751,7 +751,7 @@ void MainWindow::handleDroppedFile(const QString &filePath)
 
     selectedFileLabel->setText(fi.fileName());
     selectedFileLabel->setStyleSheet(
-        "QLabel { color: #445277; font-weight: bold; padding: 6px; }");
+        "QLabel { color: white; font-weight: bold; padding: 6px; }");
     cancelFileButton->show();
 
     statusLabel->setText("File selected: " + fi.fileName());
@@ -771,6 +771,7 @@ void MainWindow::clearFileSelection()
 // Compress
 void MainWindow::compressFile()
 {
+    resetProgressBar();
     if (operationInProgress) return;
 
     bool isText = textModeRadio->isChecked();
@@ -813,6 +814,7 @@ void MainWindow::compressFile()
 // Decompress
 void MainWindow::decompressFile()
 {
+    resetProgressBar();
     if (operationInProgress) return;
 
     bool isText = textModeRadio->isChecked();
@@ -1009,7 +1011,7 @@ void MainWindow::decompressText()
     AdaptiveModel modelDecoder;
     ArithmeticDecoder decoder(input_bits);
     std::vector<int> decodedSymbols;
-    const int MAX_SYMBOLS = 10000; // Safety limit
+    const int MAX_SYMBOLS = 100000000; // Safety limit
     int symbol_count = 0;
 
     while (symbol_count < MAX_SYMBOLS)
