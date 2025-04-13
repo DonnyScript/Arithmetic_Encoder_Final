@@ -30,7 +30,7 @@ Arithmetic Encoding is a form of entropy encoding used in lossless data compress
 4. The project will run and the project window will pop up. 
 
 ## How to use software
-1. On the top left of the screen there is a "User Guide" button. This guide will explain how to use the program. Below is a copy paste of the instructions
+1. On the top left of the Arithma-Tech window there is a "User Guide" button. This guide will explain how to use the program. Below is a copy paste of the instructions
 
 ## How to use Arithma-Tech
 Select File Input if you want to compress/decompress an image (BMP). Or choose Text Input to compress raw text. 
