@@ -4,7 +4,7 @@
 #include <vector>
 #include "adaptive_model.h"
 
-class ArithmeticDecoder 
+class ArithmeticDecoder
 {
   public:
     ArithmeticDecoder(const std::vector<unsigned char>& input_bits);

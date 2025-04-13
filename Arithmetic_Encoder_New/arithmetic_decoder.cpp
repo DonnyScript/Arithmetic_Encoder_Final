@@ -1,17 +1,18 @@
 #include "arithmetic_decoder.h"
 #include "arithmetic_encoder.h"  // For constants like TOP_VALUE, HALF, etc.
 #include <iostream>
+#include <algorithm>
 
 ArithmeticDecoder::ArithmeticDecoder(const std::vector<unsigned char>& input_bits)
-  : input_bytes(input_bits), bit_index(0), low(0), high(TOP_VALUE), code(0) 
+  : input_bytes(input_bits), bit_index(0), low(0), high(TOP_VALUE), code(0)
 {
-  for (int i = 0; i < CODE_VALUE_BITS; i++) 
+  for (int i = 0; i < CODE_VALUE_BITS; i++)
   {
     code = (code << 1) | readBit();
   }
 }
 
-int ArithmeticDecoder::readBit() 
+int ArithmeticDecoder::readBit()
 {
   if (bit_index >= input_bytes.size() * 8)
   {
@@ -38,7 +39,7 @@ int ArithmeticDecoder::decodeSymbol(AdaptiveModel& model) {
   high = low + (range_width * cum_high) / total - 1;
   low = low + (range_width * cum_low) / total;
 
-  std::cout << "Decoded symbol: " << symbol << ", low: " << low << ", high: " << high << ", code: " << code << "\n";
+  //std::cout << "Decoded symbol: " << symbol << ", low: " << low << ", high: " << high << ", code: " << code << "\n";
 
   while (true) {
     if (high < HALF) {

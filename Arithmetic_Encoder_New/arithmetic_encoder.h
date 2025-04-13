@@ -12,17 +12,17 @@ const int THIRD_QUARTER = 3 * FIRST_QUARTER;
 
 class ArithmeticEncoder {
 public:
-  ArithmeticEncoder();
-  void encodeSymbol(int symbol, AdaptiveModel& model);
-  std::vector<unsigned char> finish();
-  std::vector<unsigned char> output;
+    ArithmeticEncoder();
+    void encodeSymbol(int symbol, AdaptiveModel& model);
+    std::vector<unsigned char> finish();
+    std::vector<unsigned char> output;
 
 private:
-  int low, high;
-  int pending_bits;
-  unsigned char current_byte;
-  int bit_count;
-  void outputBit(int bit);
-  void scale();
+    int low, high;
+    int pending_bits;
+    unsigned char current_byte;
+    int bit_count;
+    void outputBit(int bit);
+    void scale();
 };
 #endif
