@@ -1,0 +1,9 @@
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/Arithma_Tech.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/edit_cache.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/rebuild_cache.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/list_install_components.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/install.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/install/local.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/install/strip.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/Arithma_Tech_autogen_timestamp_deps.dir
+C:/Users/zanec/source/repos/DonnyScript/Arithmetic_Encoder_Final/Arithmetic_Encoder_New/build/CMakeFiles/Arithma_Tech_autogen.dir
