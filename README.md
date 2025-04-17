@@ -10,7 +10,7 @@ Arithmetic Encoding is a form of entropy encoding used in lossless data compress
 
 ## Open the installer. 
 1. press next on welcome
-2. Log into your Qt account. see step one. then press next
+2. Log into your Qt account then press next.
 3. for installation options select Qt 6.9 for desktop development (should be default) then press next and accept the terms. 
 4. click next on the Licence and Start menu folder. Then click install. This process will take a couple minutes or longer. 
 5. The Qt creater should now be installed. Open Qt creator. If the firewall blocks any part of this, allow access. 
@@ -34,6 +34,6 @@ Arithmetic Encoding is a form of entropy encoding used in lossless data compress
 
 ## How to use Arithma-Tech
 Select File Input if you want to compress/decompress an image (BMP). Or choose Text Input to compress raw text. 
-If you are compressing a file: either drag-and-drop your image or click Browse... to choose one. For text, simply type or paste it. Then click Compress. 
+If you are compressing a file: either drag-and-drop your image or click "Browse..." to choose one. For text, simply type or paste it. Then click Compress, and select a location to save your text file. 
 If you are decompressing a file: Click Decompress and select the file you want to decompress. Then select a location and name for the decompressed file. 
 Open the File History dialog from the menu to review and manage logs"
