@@ -21,7 +21,8 @@ Arithmetic Encoding is a form of entropy encoding used in lossless data compress
     -  I put the repo into source/repos/Arithmetic_Encoder_final, you can put it where you want
 2. In Qt creator, press open project. Navigate to the project location. 
 3. Navigate into Arithmetic_Encoder_New folder then select/open (you may double click) the CMakeLists.txt file.
-4. A configuration page will pop up, click configure at the bottom right. You shouldn't have to change anything. This will open the project. 
+4. A configuration page will pop up, click configure at the bottom right. You shouldn't have to change anything. This will open the project.
+5. If the configure button is disabled, then you likely installed qt incorrectly. If this is the case, reinstall Qt specifically from the "Qt online installer".
 
 ## Running the project
 1. The full project with all files seen should now be in front of you.
